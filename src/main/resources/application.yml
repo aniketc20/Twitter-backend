@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    active: staging
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 25MB
+jwt:
+  secret: saltandpepper
+
+---
+spring:
+  profiles: staging
+  data.mongodb:
+    host: 127.0.0.1
+    port: 27017
+    database: twitter
+---
+server:
+  port: 8000
+
