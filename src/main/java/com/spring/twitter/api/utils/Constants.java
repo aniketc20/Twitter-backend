@@ -4,7 +4,7 @@ public class Constants {
     public static String COMMON_ID = "id";
     public static String CREATED_AT = "createdAt";
     public static String TOKEN_HEADER = "X-Redeminds-User-Token";
-    public static String USER_EMAIL = "personalInfo.email";
+    public static String USER_EMAIL = "email";
     public static String USER_PHONE = "personalInfo.contactNumber";
     public static String USER_TYPE = "typeOfUser";
     public static String COMMON_ACTIVE = "isActive";

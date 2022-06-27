@@ -17,4 +17,9 @@ public class UserController {
     public ResponseEntity<Object> createOrLoginUser(@RequestBody UserModel userinfo) {
         return userInterface.createOrloginUser(userinfo);
     }
+    @PostMapping("v1/updateProfile")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserModel updateProfile(@RequestBody UserModel userinfo) {
+        return userInterface.updateProfile(userinfo);
+    }
 }
