@@ -1,9 +1,12 @@
 package com.spring.twitter.api.service;
 
+import com.spring.twitter.api.dto.FollowFollowerDTO;
 import com.spring.twitter.api.models.user.UserModel;
 import org.springframework.http.ResponseEntity;
 
 public interface UserInterface {
     ResponseEntity<Object> createOrloginUser(UserModel userModel);
     UserModel updateProfile(UserModel userModel);
+    ResponseEntity<Object> followUsers(String email);
+    ResponseEntity<Object> followUser(FollowFollowerDTO followerDTO);
 }

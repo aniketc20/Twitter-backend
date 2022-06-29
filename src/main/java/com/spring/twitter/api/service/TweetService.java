@@ -26,6 +26,9 @@ public class TweetService implements TweetInterface {
         tweetModel.setUser(tweet.getUser());
         tweetModel.setCreatedAt(Utils.getCurrentTime());
         tweetModel.setUpdatedBy(tweet.getUser());
+        if(tweet.getMediaFile()!=null) {
+            tweetModel.setMediaFile(tweet.getMediaFile());
+        }
         mongoOperations.save(tweetModel);
         TweetDTO tweetDTO = new TweetDTO();
         tweetDTO.setTweet(tweet.getTweet());
@@ -33,8 +36,9 @@ public class TweetService implements TweetInterface {
         return ResponseEntity.ok().body(tweetDTO);
     }
     @Override
-    public ResponseEntity<Object> getUserTweets() {
-        List<TweetModel> tweetModel = mongoOperations.findAll(TweetModel.class);
+    public ResponseEntity<Object> getUserTweets(String email) {
+        Query query1 = new Query(Criteria.where("user").is(email));
+        List<TweetModel> tweetModel = mongoOperations.find(query1, TweetModel.class);
         List<TweetDTO> tweetDTO = new java.util.ArrayList<>(Collections.emptyList());
         for (TweetModel model : tweetModel) {
             TweetDTO tweetDTO1 = new TweetDTO();
@@ -43,7 +47,8 @@ public class TweetService implements TweetInterface {
             tweetDTO1.setTweet(model.getTweet());
             tweetDTO1.setCreatedAt(model.getCreatedAt());
             tweetDTO1.setUserPic(user.getPicUrl());
-            tweetDTO1.setUserName(user.getName());
+            tweetDTO1.setTweetedBy(user.getName());
+            tweetDTO1.setMediaFile(model.getMediaFile());
             tweetDTO.add(tweetDTO1);
         }
 

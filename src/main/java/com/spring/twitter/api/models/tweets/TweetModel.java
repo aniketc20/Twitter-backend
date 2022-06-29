@@ -10,5 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Tweet")
 public class TweetModel extends BaseModel {
     private String tweet;
+    private String mediaFile;
     private String user;
 }

@@ -18,8 +18,8 @@ public class TweetController {
         return tweetInterface.tweet(tweet);
     }
 
-    @GetMapping("v1/getUserTweets")
-    public ResponseEntity<Object> UserTweets() {
-        return tweetInterface.getUserTweets();
+    @GetMapping("v1/getUserTweets/{email}")
+    public ResponseEntity<Object> UserTweets(@PathVariable String email) {
+        return tweetInterface.getUserTweets(email);
     }
 }
