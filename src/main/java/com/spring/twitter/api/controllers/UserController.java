@@ -18,9 +18,15 @@ public class UserController {
     public ResponseEntity<Object> createOrLoginUser(@RequestBody UserModel userinfo) {
         return userInterface.createOrloginUser(userinfo);
     }
+    @PostMapping("v1/{email}/logout")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> logout(@PathVariable String email) {
+        return userInterface.logout(email);
+    }
     @PostMapping("v1/updateProfile")
     @ResponseStatus(HttpStatus.CREATED)
     public UserModel updateProfile(@RequestBody UserModel userinfo) {
+        System.out.println(userinfo.getName());
         return userInterface.updateProfile(userinfo);
     }
     @GetMapping("v1/followusers/{email}")
@@ -33,4 +39,25 @@ public class UserController {
     public ResponseEntity<Object> followUser(@RequestBody FollowFollowerDTO followerDTO) {
         return userInterface.followUser(followerDTO);
     }
+    @PostMapping("v1/unfollow")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> unfollowUser(@RequestBody FollowFollowerDTO followerDTO) {
+        return userInterface.unfollowUser(followerDTO);
+    }
+    @GetMapping("v1/{user}/following")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> userFollowing(@PathVariable String user) {
+        return userInterface.userFollowing(user);
+    }
+    @GetMapping("v1/{user}/followers")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> userFollowers(@PathVariable String user) {
+        return userInterface.userFollowers(user);
+    }
+    @GetMapping("v1/{user}/feed")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> userFeed(@PathVariable String user) {
+        return userInterface.userFeed(user);
+    }
+
 }

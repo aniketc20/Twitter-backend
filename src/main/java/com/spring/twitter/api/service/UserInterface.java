@@ -9,4 +9,9 @@ public interface UserInterface {
     UserModel updateProfile(UserModel userModel);
     ResponseEntity<Object> followUsers(String email);
     ResponseEntity<Object> followUser(FollowFollowerDTO followerDTO);
+    ResponseEntity<Object> unfollowUser(FollowFollowerDTO followerDTO);
+    ResponseEntity<Object> userFollowing(String user);
+    ResponseEntity<Object> userFollowers(String user);
+    ResponseEntity<Object> userFeed(String user);
+    ResponseEntity<Object> logout(String email);
 }

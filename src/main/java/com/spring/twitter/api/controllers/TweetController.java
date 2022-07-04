@@ -20,6 +20,6 @@ public class TweetController {
 
     @GetMapping("v1/getUserTweets/{email}")
     public ResponseEntity<Object> UserTweets(@PathVariable String email) {
-        return tweetInterface.getUserTweets(email);
+        return tweetInterface.getUserDetails(email);
     }
 }

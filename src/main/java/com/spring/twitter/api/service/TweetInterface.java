@@ -5,5 +5,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface TweetInterface {
     ResponseEntity<Object> tweet(TweetModel tweet);
-    ResponseEntity<Object> getUserTweets(String email);
+    ResponseEntity<Object> getUserDetails(String email);
 }

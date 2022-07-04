@@ -11,4 +11,6 @@ public class UserDTO {
     private String email;
     private String message;
     private Integer status;
+    private Long followers;
+    private Long following;
 }

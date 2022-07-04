@@ -10,9 +10,12 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -21,9 +24,15 @@ public class TweetService implements TweetInterface {
     MongoOperations mongoOperations;
     @Override
     public ResponseEntity<Object> tweet(TweetModel tweet) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentLoggedinUser = authentication.getName();
+        Query query2 = new Query(Criteria.where(Constants.USER_EMAIL).is(currentLoggedinUser));
+        UserModel loggedInUser = mongoOperations.findOne(query2, UserModel.class);
         TweetModel tweetModel = new TweetModel();
         tweetModel.setTweet(tweet.getTweet());
         tweetModel.setUser(tweet.getUser());
+        tweetModel.setTweetedBy(loggedInUser.getName());
+        tweetModel.setUserPic(loggedInUser.getPicUrl());
         tweetModel.setCreatedAt(Utils.getCurrentTime());
         tweetModel.setUpdatedBy(tweet.getUser());
         if(tweet.getMediaFile()!=null) {
@@ -36,8 +45,10 @@ public class TweetService implements TweetInterface {
         return ResponseEntity.ok().body(tweetDTO);
     }
     @Override
-    public ResponseEntity<Object> getUserTweets(String email) {
+    public ResponseEntity<Object> getUserDetails(String email) {
         Query query1 = new Query(Criteria.where("user").is(email));
+        Query query2 = new Query(Criteria.where("email").is(email));
+        UserModel userModel = mongoOperations.findOne(query2, UserModel.class);
         List<TweetModel> tweetModel = mongoOperations.find(query1, TweetModel.class);
         List<TweetDTO> tweetDTO = new java.util.ArrayList<>(Collections.emptyList());
         for (TweetModel model : tweetModel) {
@@ -51,7 +62,16 @@ public class TweetService implements TweetInterface {
             tweetDTO1.setMediaFile(model.getMediaFile());
             tweetDTO.add(tweetDTO1);
         }
-
-        return ResponseEntity.ok().body(tweetDTO);
+        HashMap<String,List> map=new HashMap<String, List>();
+        List<String> userDetails = new java.util.ArrayList<>(Collections.emptyList());
+        userDetails.add(userModel.getName());
+        userDetails.add(userModel.getPicUrl());
+        userDetails.add(userModel.getEmail());
+        Collections.reverse(tweetDTO);
+        map.put("tweets", tweetDTO);
+        map.put("followers", Collections.singletonList(userModel.getFollowers().stream()));
+        map.put("following", Collections.singletonList(userModel.getFollowing().stream()));
+        map.put("user_details", userDetails);
+        return ResponseEntity.ok().body(map);
     }
 }
