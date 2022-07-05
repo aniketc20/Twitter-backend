@@ -7,6 +7,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
 
+/**
+ * @author Aniket
+ * @version 1.0
+ * @date 30/06/22
+ */
 @Getter
 @Setter
 @Document(collection = "Users")

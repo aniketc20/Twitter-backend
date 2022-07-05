@@ -3,10 +3,9 @@ package com.spring.twitter.api.exception;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author Paly
+ * @author Aniket
  * @version 1.0
- * @date 04/05/22 9:34 PM
- * @company Redeminds
+ * @date 30/06/22
  */
 public class CustomException extends RuntimeException {
 

@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * @author Aniket
+ * @version 1.0
+ * @date 30/06/22
+ */
 @Repository
 public interface UserRepository extends MongoRepository<UserModel, String> {
     UserModel findByPassword(String password);

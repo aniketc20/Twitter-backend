@@ -15,15 +15,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Getter
 @Setter
-@Document(collection = "Tweet")
-public class TweetModel extends BaseModel {
+@Document(collection = "TweetComment")
+public class TweetComment extends BaseModel {
     @JsonIgnore
     @Id
     private ObjectId objectId;
+    private Long id;
     private Long tweetId;
-    private String tweetedBy;
-    private String tweet;
+    private String commentedBy;
+    private String commenterPic;
+    private String commenterEmail;
+    private String comment;
     private String mediaFile;
-    private String tweeterEmail;
-    private String tweeterPic;
 }

@@ -3,6 +3,7 @@ package com.spring.twitter.api.service;
 import com.spring.twitter.api.dto.FollowFollowerDTO;
 import com.spring.twitter.api.dto.TweetDTO;
 import com.spring.twitter.api.dto.UserDTO;
+import com.spring.twitter.api.models.tweets.TweetComment;
 import com.spring.twitter.api.models.tweets.TweetModel;
 import com.spring.twitter.api.models.user.UserModel;
 import com.spring.twitter.api.security.JwtTokenProvider;
@@ -23,7 +24,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
+/**
+ * @author Aniket
+ * @version 1.0
+ * @date 30/06/22
+ */
 @Service
 public class UserService implements UserInterface{
     @Value("${security.jwt.token.secret-key:secret-key}")
@@ -44,6 +49,7 @@ public class UserService implements UserInterface{
             UserModel user = mongoOperations.findOne(query, UserModel.class);
             userInfoResponseDto.setMessage("User exists!");
             userInfoResponseDto.setEmail(user.getEmail());
+            userInfoResponseDto.setName(user.getName());
             userInfoResponseDto.setPic(user.getPicUrl());
             String tokenHeader = jwtTokenProvider.createToken(userInfo.getEmail(), user.getPassword(), false, false);
             return ResponseEntity.ok().header(Constants.TOKEN_HEADER, tokenHeader).header("Access-Control-Expose-Headers", Constants.TOKEN_HEADER).body(userInfoResponseDto);
@@ -188,9 +194,9 @@ public class UserService implements UserInterface{
     @Override
     public ResponseEntity<Object> userFollowers(String user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentLoggedinUser = authentication.getName();
+        String currentLoggedUser = authentication.getName();
         Query query = new Query(Criteria.where(Constants.USER_EMAIL).is(user));
-        Query query2 = new Query(Criteria.where(Constants.USER_EMAIL).is(currentLoggedinUser));
+        Query query2 = new Query(Criteria.where(Constants.USER_EMAIL).is(currentLoggedUser));
         UserModel userModel = mongoOperations.findOne(query, UserModel.class);
         UserModel loggedInUser = mongoOperations.findOne(query2, UserModel.class);
         List<UserDTO> userInfoResponseDto = new ArrayList<>(Collections.emptyList());
@@ -205,7 +211,7 @@ public class UserService implements UserInterface{
             if(loggedInUser.getFollowing().contains(user_followers.getEmail())) {
                 userDTO1.setMessage("Unfollow");
             }
-            if(Objects.equals(user_followers.getEmail(), currentLoggedinUser)) {
+            if(Objects.equals(user_followers.getEmail(), currentLoggedUser)) {
                 userDTO1.setMessage("Logged in user");
             }
             userDTO1.setStatus(HttpStatus.OK.value());
@@ -222,14 +228,19 @@ public class UserService implements UserInterface{
         UserModel loggedInUser = mongoOperations.findOne(query1, UserModel.class);
         for (TweetModel tweet : tweets) {
             TweetDTO tweetDTO1 = new TweetDTO();
-            Query query2 = new Query(Criteria.where(Constants.USER_EMAIL).is(tweet.getUser()));
+            Query query2 = new Query(Criteria.where(Constants.USER_EMAIL).is(tweet.getTweeterEmail()));
             UserModel tweetedBy = mongoOperations.findOne(query2, UserModel.class);
             if(loggedInUser.getFollowing().contains(tweetedBy.getEmail()) || Objects.equals(tweetedBy.getEmail(), user)) {
+                Query query = new Query(Criteria.where(Constants.TWEET_ID).is(tweet.getTweetId()));
+                List<TweetComment> comments = mongoOperations.find(query, TweetComment.class);
                 tweetDTO1.setTweet(tweet.getTweet());
                 tweetDTO1.setCreatedAt(tweet.getCreatedAt());
                 tweetDTO1.setUserPic(tweetedBy.getPicUrl());
                 tweetDTO1.setTweetedBy(tweetedBy.getName());
                 tweetDTO1.setMediaFile(tweet.getMediaFile());
+                tweetDTO1.setComments(comments);
+                tweetDTO1.setTweetId(tweet.getTweetId());
+                tweetDTO1.setNumOfComments(comments.stream().count());
                 tweetDTO.add(tweetDTO1);
             }
         }
