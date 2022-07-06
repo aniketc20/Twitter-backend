@@ -15,5 +15,5 @@ spring:
     uri: mongodb+srv://admin:admin@firstcluster.nrj8x.mongodb.net/Twitter?retryWrites=true&w=majority
 ---
 server:
-  port: 8000
+  port: 8080
 

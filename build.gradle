@@ -1,3 +1,12 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.4.3'
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.7.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -26,13 +35,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0'
-	implementation group: 'com.google.cloud.tools', name: 'appengine-gradle-plugin', version: '2.2.0'
 	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.1'
 	implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.9'
 	implementation 'org.springframework.security:spring-security-test'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
