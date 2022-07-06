@@ -68,7 +68,7 @@ public class UserService implements UserInterface{
         userInfoResponseDto.setName(userInfo.getName());
         userInfoResponseDto.setMessage("User Created!");
         mongoOperations.save(userModel);
-        String tokenHeader = jwtTokenProvider.createToken(userInfo.getEmail(), userInfo.getPassword(), false, false);
+        String tokenHeader = jwtTokenProvider.createToken(userInfo.getEmail(), userModel.getPassword(), false, false);
         return ResponseEntity.ok().header(Constants.TOKEN_HEADER, tokenHeader).header("Access-Control-Expose-Headers", Constants.TOKEN_HEADER).body(userInfoResponseDto);
     }
     public ResponseEntity<Object> logout(String email) {
