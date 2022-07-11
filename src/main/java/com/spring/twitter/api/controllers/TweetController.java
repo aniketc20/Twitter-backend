@@ -37,4 +37,10 @@ public class TweetController {
     public ResponseEntity<Object> TweetComment(@RequestBody TweetComment comment) {
         return tweetInterface.tweetComment(comment);
     }
+    @PostMapping("v1/{tweetId}/{email}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> LikeTweet(@PathVariable Long tweetId, @PathVariable String email) {
+        System.out.println(email);
+        return tweetInterface.likeTweet(tweetId, email);
+    }
 }

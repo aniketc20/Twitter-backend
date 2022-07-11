@@ -238,9 +238,12 @@ public class UserService implements UserInterface{
                 tweetDTO1.setUserPic(tweetedBy.getPicUrl());
                 tweetDTO1.setTweetedBy(tweetedBy.getName());
                 tweetDTO1.setMediaFile(tweet.getMediaFile());
+                tweetDTO1.setEmail(tweet.getTweeterEmail());
                 tweetDTO1.setComments(comments);
                 tweetDTO1.setTweetId(tweet.getTweetId());
                 tweetDTO1.setNumOfComments(comments.stream().count());
+                tweetDTO1.setLikedBy(tweet.getLikedBy());
+                tweetDTO1.setNumOfLikes(tweet.getLikedBy().stream().count());
                 tweetDTO.add(tweetDTO1);
             }
         }

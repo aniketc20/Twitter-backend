@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Aniket
@@ -23,4 +24,6 @@ public class TweetDTO {
     private Long numOfComments;
     private long createdAt;
     private List<TweetComment> comments;
+    private Set<String> likedBy;
+    private Long numOfLikes;
 }

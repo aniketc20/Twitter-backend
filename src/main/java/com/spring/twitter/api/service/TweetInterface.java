@@ -14,4 +14,5 @@ public interface TweetInterface {
     ResponseEntity<Object> getUserDetails(String email);
     ResponseEntity<Object> tweetComment(TweetComment comment);
     ResponseEntity<Object> getTweetInfo(Long tweetId);
+    ResponseEntity<Object> likeTweet(Long tweetId, String email);
 }

@@ -1,12 +1,18 @@
 package com.spring.twitter.api.controllers;
 
 import com.spring.twitter.api.dto.FollowFollowerDTO;
+import com.spring.twitter.api.dto.TweetDTO;
 import com.spring.twitter.api.models.user.UserModel;
 import com.spring.twitter.api.service.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Aniket
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     UserInterface userInterface;
+    private final ExecutorService bakers = Executors.newFixedThreadPool(5);
     @PostMapping("v1/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createOrLoginUser(@RequestBody UserModel userinfo) {
@@ -64,5 +71,28 @@ public class UserController {
     public ResponseEntity<Object> userFeed(@PathVariable String user) {
         return userInterface.userFeed(user);
     }
-
+    @GetMapping("v1/poll")
+    public DeferredResult<Object> userFeedLongPolling(@RequestParam String user) {
+        DeferredResult<Object> output = new DeferredResult<>(120000L);
+        output.onTimeout(() -> output.setErrorResult("no updates"));
+        bakers.execute(() -> {
+            try {
+                //Thread.sleep(10);
+                List<TweetDTO> tweetDTO = (List<TweetDTO>) userInterface.userFeed(user).getBody();
+                int initialSize  = tweetDTO.size();
+                int newSize;
+                while (true) {
+                    tweetDTO = (List<TweetDTO>) userInterface.userFeed(user).getBody();
+                    newSize = tweetDTO.size();
+                    if(newSize!=initialSize) {
+                        break;
+                    }
+                }
+                output.setResult(userInterface.userFeed(user));
+            } catch (Exception e) {
+                // ...
+            }
+        });
+        return output;
+    }
 }

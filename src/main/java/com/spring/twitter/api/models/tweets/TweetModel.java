@@ -8,6 +8,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Set;
+
 /**
  * @author Aniket
  * @version 1.0
@@ -26,4 +28,5 @@ public class TweetModel extends BaseModel {
     private String mediaFile;
     private String tweeterEmail;
     private String tweeterPic;
+    private Set<String> likedBy;
 }

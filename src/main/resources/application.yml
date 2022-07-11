@@ -12,7 +12,9 @@ jwt:
 spring:
   profiles: staging
   data.mongodb:
-    uri: mongodb+srv://admin:admin@firstcluster.nrj8x.mongodb.net/Twitter?retryWrites=true&w=majority
+    host: 34.125.125.27
+    port: 27017
+    database: twitter
 ---
 server:
   port: 8080

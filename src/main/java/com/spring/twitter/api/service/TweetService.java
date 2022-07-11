@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Aniket
@@ -42,6 +44,8 @@ public class TweetService implements TweetInterface {
         tweetModel.setTweeterPic(loggedInUser.getPicUrl());
         tweetModel.setCreatedAt(Utils.getCurrentTime());
         tweetModel.setUpdatedBy(tweet.getTweeterEmail());
+        Set<String> EmptySet = Collections.emptySet();
+        tweetModel.setLikedBy(EmptySet);
         if(tweet.getMediaFile()!=null) {
             tweetModel.setMediaFile(tweet.getMediaFile());
         }
@@ -109,7 +113,26 @@ public class TweetService implements TweetInterface {
         tweetDTO.setMediaFile(tweet.getMediaFile());
         tweetDTO.setNumOfComments(comments.stream().count());
         tweetDTO.setComments(comments);
+        tweetDTO.setLikedBy(tweet.getLikedBy());
+        tweetDTO.setNumOfLikes(tweet.getLikedBy().stream().count());
         System.out.println(tweet);
+        return ResponseEntity.ok().body(tweetDTO);
+    }
+
+    public ResponseEntity<Object> likeTweet(Long tweetId, String email) {
+        Query query = new Query(Criteria.where(Constants.TWEET_ID).is(tweetId));
+        TweetModel tweet = mongoOperations.findOne(query, TweetModel.class);
+        Update update = new Update();
+        if(tweet.getLikedBy().contains(email)) {
+            update.pull("likedBy", email);
+        }
+        else {
+            update.addToSet("likedBy", email);
+        }
+        mongoOperations.updateFirst(query, update, TweetModel.class);
+        TweetModel updatedTweet = mongoOperations.findOne(query, TweetModel.class);
+        TweetDTO tweetDTO = new TweetDTO();
+        tweetDTO.setLikedBy(updatedTweet.getLikedBy());
         return ResponseEntity.ok().body(tweetDTO);
     }
 }
