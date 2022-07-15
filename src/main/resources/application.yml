@@ -12,7 +12,7 @@ jwt:
 spring:
   profiles: staging
   data.mongodb:
-    host: 34.128.109.73
+    host: 34.125.125.27
     port: 27017
     database: twitter
 ---
