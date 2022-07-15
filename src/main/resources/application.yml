@@ -17,5 +17,5 @@ spring:
     database: twitter
 ---
 server:
-  port: 80
+  port: 8080
 
